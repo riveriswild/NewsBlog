@@ -1,0 +1,10 @@
+{% load custom_filters %}
+  <h2>Привет, {{ user }} </h2>
+    <h3>Новая статья в категории, на которую вы подписаны:</h3>
+
+        <h3><a href="http:///127.0.0.1:8000{% url 'post' post.id %}"> {{post.title}}</a> </h3>
+{{ post.text|truncatechars:50 }} <br>
+  {{ post.author }} <br>
+  {{ post.dateCreation }} <br>
+  {{ post.text | truncatechars:50 | censor }} <br>
+  {{ post.show_category }} <br> <br>

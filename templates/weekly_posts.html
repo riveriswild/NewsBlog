@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+</head>
+<body>
+    <h2>Привет, {{ user }} </h2>
+    <h3>Новые статьи на нашем сайте в разделе {{ cat }}:</h3>
+    {% for post in posts %}
+      <h3><a href="http:///127.0.0.1:8000{% url 'post' post.id %}"> {{post.title}}</a> </h3> <br>
+      {{ post.author }} <br>
+      {{ post.preview }} <br>
+    {% endfor %}
+
+ <br>
+
+
+</body>
+</html>

@@ -1,0 +1,28 @@
+{% extends 'flatpages/default.html' %}
+{% load custom_filters %}
+
+{% block title %}
+<h1><a href="{% url 'category' category.id %}">{{ category.name }}</a> </h1>
+{% endblock title %}
+
+{% block content %}
+           {% if user in category.subscribers.all %}
+              <a href="{% url 'unsubscribe' category.id %}"> Unsubscribe</a>
+
+                    {% else %}
+
+                        <a href="{% url 'subscribe' category.id %}"> Subscribe</a>
+
+                    {% endif %}
+
+
+{% for post in posts %}
+<br>
+ <b><a href="{% url 'post' post.id %}">{{ post.title | censor }}</a> </b><br>
+  {{ post.author }} <br>
+  {{ post.dateCreation }} <br>
+  {{ post.text | truncatechars:50 | censor }} <br><br>
+{{ categories }}
+
+{% endfor %}
+{% endblock content %}
