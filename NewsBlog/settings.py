@@ -12,10 +12,10 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
+import logging
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -24,10 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-e*g5odmbme64-1$fjb833(7k&v!000(b54(-algu88ca=y+rtw'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['127.0.0.1']
 
 # Application definition
 
@@ -50,7 +49,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
 
     'fpages',
-    #'news',
+    # 'news',
     'django_filters',
 ]
 
@@ -95,7 +94,6 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
@@ -105,7 +103,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -125,7 +122,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
@@ -139,12 +135,10 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -156,6 +150,8 @@ SITE_ID = 1
 STATICFILES_DIRS = [
     BASE_DIR / "static"
 ]
+
+ADMINS = [('Alice', 'riveriswild.rw@gmail.com')]
 
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/posts/'
@@ -190,7 +186,100 @@ CELERY_RESULT_SERIALIZER = 'json'
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': os.path.join(BASE_DIR, 'cache_files'), # Указываем, куда будем сохранять кэшируемые файлы! Не забываем создать папку cache_files внутри папки с manage.py!
+        'LOCATION': os.path.join(BASE_DIR, 'cache_files'),
+        # Указываем, куда будем сохранять кэшируемые файлы! Не забываем создать папку cache_files внутри папки с manage.py!
     }
 }
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        },
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+    'formatters': {
+        'simple': {
+            'format': '%(asctime)s %(levelname)s %(message)s'  # время, уровень лог сообщения, сообщение
+        },
+        'path': {
+            'format': '%(asctime)s %(levelname)s %(message)s %(pathname)s'  # + путь к источнику
+        },
+        'st': {
+            'format': '%(asctime)s %(levelname)s %(message)s %(pathname)s %(exc_info)s'  # + стэк ошибки
+        },
+        'module': {
+            'format': '%(asctime)s %(levelname)s %(message)s %(module)s'           # время, уровень, модуль, сообщение
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'level': 'DEBUG',
+            'filters':  ['require_debug_true'],
+            'formatter': 'simple',
+        },
+        'console_w': {
+            'class': 'logging.StreamHandler',
+            'level': 'WARNING',
+            'filters': ['require_debug_true'],
+            'formatter': 'path',
+        },
+        'console_e': {
+            'class': 'logging.StreamHandler',
+            'level': 'ERROR',
+            'filters': ['require_debug_true'],
+            'formatter': 'st',
+        },
+        'general': {
+            'class': 'logging.FileHandler',
+            'filename': 'general.log',
+            'level': 'INFO',
+            'filters': ['require_debug_false'],
+            'formatter': 'module',
+        },
+        'errors': {
+            'class': 'logging.FileHandler',
+            'filename': 'errors.log',
+            'level': 'ERROR',
+            'formatter': 'st',
+        },
+        'security': {
+            'class': 'logging.FileHandler',
+            'filename': 'security.log',
+            'formatter': 'module',
+        },
+        'mail': {
+            'class': 'django.utils.log.AdminEmailHandler',
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'formatter': 'path',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'console_w', 'console_e', 'general'],
+        },
+        'django.request': {
+            'handlers': ['errors', 'mail'],
+        },
+        'django.server': {
+            'handlers': ['errors', 'mail'],
+        },
+        'django.template': {
+            'handlers': ['errors'],
+        },
+        'django.db_backends': {
+            'handlers': ['errors'],
+        },
+        'django.security': {
+            'handlers': ['security'],
+        },
+
+    }
+}

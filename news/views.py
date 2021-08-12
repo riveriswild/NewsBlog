@@ -7,7 +7,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
+import logging
 
+
+logger = logging.getLogger(__name__)
 
 
 class NewsList(ListView):

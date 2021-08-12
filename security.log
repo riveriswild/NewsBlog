@@ -1,0 +1,2 @@
+2021-08-12 21:17:15,579 ERROR Invalid HTTP_HOST header: '127.0.0.1:8000'. You may need to add '127.0.0.1' to ALLOWED_HOSTS. exception
+2021-08-12 21:17:24,273 ERROR Invalid HTTP_HOST header: '127.0.0.1:8000'. You may need to add '127.0.0.1' to ALLOWED_HOSTS. exception
